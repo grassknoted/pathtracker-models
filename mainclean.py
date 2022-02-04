@@ -121,7 +121,7 @@ if __name__ == '__main__':
     if args.optical_flow:
         stem = "_{}".format(stem, "flow")
     # results_folder = os.path.join('results', stem, '{0}'.format(args.name))
-    results_folder = os.path.join("/cifs/data/tserre_lrs/projects/prj_tracking/pytorch_hGRU/cifs_results", stem, '{0}'.format(args.name))
+    results_folder = os.path.join("/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/results", stem, '{0}'.format(args.name))
     ES = EarlyStopping(patience=200, results_folder=results_folder)
     os.makedirs(results_folder, exist_ok=True)
     exp_logging = args.log

@@ -340,7 +340,7 @@ def plot_results(states, imgs, target, output, timesteps, gates=None, prep_gifs=
                     os.remove(filename)
 
 
-LOCAL = "/gpfs/data/tserre/data/tracking/tfrecords"
+LOCAL = "/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash"
 
 def dataset_selector(dist, speed, length, optical_flow=False):
     """Organize the datasets here."""
@@ -349,6 +349,7 @@ def dataset_selector(dist, speed, length, optical_flow=False):
         stem = "tfrecords_optic_flow"
     if dist == 14 and speed == 1 and length == 64:
         lp = os.path.join(LOCAL, "downsampled_constrained_red_blue_datasets_64_32_32_separate_channels/14_dist/tfrecords/")
+        lp = LOCAL
         if os.path.exists(lp):
             print("Loading data from local storage.")
             return lp, 64, 20000, 20000
@@ -358,6 +359,7 @@ def dataset_selector(dist, speed, length, optical_flow=False):
 
     elif dist == 14 and speed == 1 and length == 32:
         lp = os.path.join(LOCAL, "downsampled_constrained_red_blue_datasets_32_32_32_separate_channels/14_dist/tfrecords/")
+        lp = LOCAL
         if os.path.exists(lp):
             print("Loading data from local storage.")
             return lp, 64, 20000, 20000
@@ -365,6 +367,7 @@ def dataset_selector(dist, speed, length, optical_flow=False):
             return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_32_32_32_separate_channels/14_dist/tfrecords/', 32, 20000, 20000
     elif dist == 5 and speed == 1 and length == 32:
         lp = os.path.join(LOCAL, "downsampled_constrained_red_blue_datasets_32_32_32_separate_channels/5_dist/tfrecords/")
+        lp = LOCAL
         if os.path.exists(lp):
             print("Loading data from local storage.")
             return lp, 64, 20000, 20000
@@ -372,6 +375,7 @@ def dataset_selector(dist, speed, length, optical_flow=False):
             return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_32_32_32_separate_channels/5_dist/tfrecords/', 32, 20000, 20000
     elif dist == 0 and speed == 1 and length == 32:
         lp = os.path.join(LOCAL, "downsampled_constrained_red_blue_datasets_32_32_32_separate_channels/0_dist/tfrecords/")
+        lp = LOCAL
         if os.path.exists(lp):
             print("Loading data from local storage.")
             return lp, 64, 20000, 20000
@@ -379,29 +383,29 @@ def dataset_selector(dist, speed, length, optical_flow=False):
             return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_32_32_32_separate_channels/0_dist/tfrecords/', 32, 20000, 20000
 
     elif dist == 14 and speed == 1 and length == 128:
-        return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_128_32_32_separate_channels/14_dist/tfrecords/', 128, 20000, 20000
+        return '/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash', 128, 20000, 20000
     elif dist == 14 and speed == 1 and length == 32:
-        return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_32_32_32_separate_channels/14_dist/tfrecords/', 32, 20000, 20000
+        return '/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash', 32, 20000, 20000
     elif dist == 25 and speed == 1 and length == 64:
-        return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_64_32_32_separate_channels/25_dist/tfrecords/', 64, 20000, 20000
+        return '/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash', 64, 20000, 20000
     elif dist == 14 and speed == 2 and length == 64:
-        return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_64_32_32_separate_channels_skip_param_2/14_dist/tfrecords/', 64, 20000, 20000
+        return '/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash', 64, 20000, 20000
     elif dist == 0 and speed == 1 and length == 64:
         lp = os.path.join(LOCAL, "downsampled_constrained_red_blue_datasets_64_32_32_separate_channels/0_dist/{}/".format(stem))
         if os.path.exists(lp):
             print("Loading data from local storage.")
             return lp, 64, 20000, 20000
         else:
-            return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_64_32_32_separate_channels/0_dist/tfrecords/', 64, 20000, 20000
+            return '/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash', 64, 20000, 20000
     elif dist == 5 and speed == 1 and length == 64:
         lp = os.path.join(LOCAL, "downsampled_constrained_red_blue_datasets_64_32_32_separate_channels/5_dist/{}/".format(stem))
         if os.path.exists(lp):
             print("Loading data from local storage.")
             return lp, 64, 20000, 20000
         else:
-            return "/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_64_32_32_separate_channels/5_dist/tfrec/{}/".format(stem), 64, 20000, 20000
+            return "/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash".format(stem), 64, 20000, 20000
     elif dist == 14 and speed == 4 and length == 64:
-        return '/cifs/data/tserre_lrs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_64_32_32_separate_channels_skip_param_4/14_dist/tfrecords/', 64, 20000, 20000
+        return '/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash', 64, 20000, 20000
 
 
 def get_datasets():
