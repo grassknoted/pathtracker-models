@@ -340,7 +340,7 @@ def plot_results(states, imgs, target, output, timesteps, gates=None, prep_gifs=
                     os.remove(filename)
 
 
-LOCAL = "/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash"
+LOCAL = "/cifs/data/tserre/CLPS_Serre_Lab/projects/prj_tracking_mot/akash/"
 
 def dataset_selector(dist, speed, length, optical_flow=False):
     """Organize the datasets here."""
