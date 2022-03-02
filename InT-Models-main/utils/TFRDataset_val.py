@@ -3,7 +3,7 @@ import tensorflow as tf
 print("Tensorflow version " + tf.__version__)
 AUTO = tf.data.experimental.AUTOTUNE # used in tf.data.Dataset API
 
-def read_tfrecord(example, timesteps=64, height=32, width=32):
+def read_tfrecord(example):
     features = {
         'label': tf.io.FixedLenFeature([], tf.string),
         'image': tf.io.FixedLenFeature([], tf.string),
@@ -17,7 +17,7 @@ def read_tfrecord(example, timesteps=64, height=32, width=32):
     image = tf.io.decode_raw(image, tf.uint8)
     # image = tf.reshape(image, [64, 128, 128, 3])
     # Downsized dataset
-    image = tf.reshape(image, [timesteps, height, width, 3])
+    image = tf.reshape(image, [64, 32, 32, 3])
     # image = tf.reshape(image, [128, 16, 16, 3])
     # image = tf.reshape(image, [64, 128, 128, 3])
 
@@ -28,7 +28,7 @@ def read_tfrecord(example, timesteps=64, height=32, width=32):
     return image, label #, height, width
     
 
-def tfr_data_loader(data_dir="", batch_size=32, drop_remainder=True, shuffle_buffer=1000, timesteps=64, height=32, width=32):
+def tfr_data_loader_val(data_dir="", batch_size=32, drop_remainder=True):
     '''
     Function that takes path to tfrecord files (allows regular expressions), 
     and returns a tensorflow dataset that can be iterated upon, 
@@ -45,12 +45,14 @@ def tfr_data_loader(data_dir="", batch_size=32, drop_remainder=True, shuffle_buf
 
     dataset = tf.io.gfile.glob(data_dir)
     dataset = tf.data.TFRecordDataset(dataset, compression_type='GZIP') # , cycle_length=batch_size, num_parallel_calls=8)
-    dataset = dataset.map(lambda x: read_tfrecord(x, height=height, width=width, timesteps=timesteps), num_parallel_calls=AUTO)
+    dataset = dataset.map(read_tfrecord, num_parallel_calls=AUTO)
     dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
-    if shuffle_buffer > 0:
-        dataset = dataset.shuffle(shuffle_buffer, reshuffle_each_iteration=True)
+    # dataset = dataset.shuffle(10)
     dataset = dataset.batch(batch_size, drop_remainder=drop_remainder)
     return dataset
+
+
+
 
 # start=time.time()
 # for x in a:
