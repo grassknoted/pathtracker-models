@@ -466,6 +466,7 @@ class FFhGRU(nn.Module):
     def __init__(self, dimensions, timesteps=8, kernel_size=15, jacobian_penalty=False, grad_method='bptt', no_inh=False, lesion_alpha=False, lesion_mu=False, lesion_gamma=False, lesion_kappa=False, nl=F.softplus):
         '''
         '''
+        #import ipdb; ipdb.set_trace()
         super(FFhGRU, self).__init__()
         self.timesteps = timesteps
         self.jacobian_penalty = jacobian_penalty
@@ -502,6 +503,7 @@ class FFhGRU(nn.Module):
         self.nl = nl
 
     def forward(self, x, testmode=False):
+        import ipdb; ipdb.set_trace()
         # First step: replicate x over the channel dim self.hgru_size times
         xbn = self.preproc(x)
         # xbn = self.bn(xbn)  # This might be hurting me...

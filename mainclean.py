@@ -165,6 +165,7 @@ if __name__ == '__main__':
     if args.ckpt is not None:
         model = engine.load_ckpt(model, args.ckpt)
     scale = torch.Tensor([1.0]).to(device)
+    print("\nDEBUG: Just before we start training")
     for epoch in range(args.start_epoch, args.epochs):
         
         batch_time = AverageMeter()
@@ -179,12 +180,14 @@ if __name__ == '__main__':
         model.train()
         end = time.perf_counter()
 
-        # import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         for idx, (imgs, target) in enumerate(train_loader):
+            print("DEBUG:", idx, len(imgs), len(target))
             data_time.update(time.perf_counter() - end)
             
             imgs, target = engine.prepare_data(imgs=imgs, target=target, args=args, device=device, disentangle_channels=disentangle_channels)  # noqa
 
+            print("DEBUG: Before Run training")
             # Run training
             output, jv_penalty = engine.model_step(model, imgs, model_name=args.model)
             if isinstance(output, tuple):

@@ -27,7 +27,7 @@ try:
 except:
     print("Failed to import tqdm.")
 
-
+LOCAL = "/media/data_cifs/projects/prj_tracking_mot/akash"
 TORCHVISION = ['r3d', 'm3d', 'mc3', 'r2plus1', 'nostride_r3d', 'nostride_r3d_pos', 'nostride_video_cc_small', 'timesformer_facebook', 'performer', 'timesformer_facebook_in', 'in_timesformer_facebook',  'space_in_timesformer_facebook', 'timesformer_facebook_in_space', 'imagenet_r3d']
 SLOWFAST = ['slowfast', 'slowfast_nl']
 ALL_DATASETS = [ 
@@ -130,6 +130,8 @@ def model_step(model, imgs, model_name, test=False):
             output, states, gates = model.forward(imgs, testmode=True)
             return output, states, gates
         else:
+            print("DEBUG: This else-else is being executed")
+            import ipdb; ipdb.set_trace()
             output, jv_penalty = model.forward(imgs)
     if test:
         return output, None, None
@@ -141,13 +143,13 @@ def model_selector(args, timesteps, device, fb_kernel_size=7, dimensions=32):
     """Select a model."""
     if args.model == 'hgru':
         print("Init model hgru ", args.algo, 'penalty: ', args.penalty)  # , 'steps: ', timesteps)
-        raise NotImplementedError("This is Giriks version.")
+        #raise NotImplementedError("This is Giriks version.")
         model = models.hConvGRU(timesteps=timesteps, filt_size=15, num_iter=15, exp_name=args.name, jacobian_penalty=jacobian_penalty,
                          grad_method=args.algo)
     elif args.model == 'ffhgru':
         print("Init model ffhgru full", args.algo, 'penalty: ', args.penalty)
         model = ffhgru.FFhGRU(
-            dimensions=dimensions,
+            dimensions=64,
             timesteps=timesteps,
             kernel_size=fb_kernel_size,
             jacobian_penalty=False,
@@ -373,7 +375,7 @@ def model_selector(args, timesteps, device, fb_kernel_size=7, dimensions=32):
         model.fc = nn.Linear(num_ftrs, 1)
     else:
         raise NotImplementedError("Model {} not found.".format(args.model))
-
+    print("DEBUG: Model passed successfully")
     return model
 
 
@@ -519,6 +521,7 @@ def plot_results(states, imgs, target, output, timesteps, gates=None, prep_gifs=
 
 
 def of_dataset_selector(dist, speed, length):
+    return '/media/data_cifs/projects/prj_tracking_mot/akash/', 64, 20000, 20000
     if dist == 14 and speed == 1 and length == 64:
         return '/media/data_cifs/projects/prj_tracking/downsampled_constrained_red_blue_datasets_64_32_32_separate_channels/14_dist/tfrecords_optic_flow/', 64, 20000, 20000
     elif dist == 25 and speed == 1 and length == 64:
@@ -536,6 +539,9 @@ def of_dataset_selector(dist, speed, length):
 
 def dataset_selector(dist, thickness, length):
     """Organize the datasets here."""
+    stem = "tfrecords"
+    print("\n\nFOUND DATASET\n\n")
+    return "/media/data_cifs/projects/prj_tracking_mot/akash/", 64, 20000, 20000
     path_root = "/users/gmalik/scratch/occluder_pathtracker/" #"/media/data_cifs/projects/prj_tracking/occluder_pathtracker/"
     dataset = os.path.join(path_root, "occluder_"+str(thickness)+"_pixel", str(length)+"_32_32", str(dist)+"_dist", "tfrecords/")
     if os.path.exists(dataset):
@@ -592,6 +598,7 @@ def tuning_dataset_selector():
 
 def human_dataset_selector(set_name):
     """Right now, just return the path to Girik's circular dataset."""
+    return '/media/data_cifs/projects/prj_tracking_mot/akash/', 64, 2000, 2000
     if set_name == "gen_1_25_64":
         return '/media/data_cifs/projects/prj_tracking/MTurk_videos_from_VM/downsampled_constrained_red_blue_64_32_32/25_dist_again_for_human_correlation/tfrecords', 64, 40, 40
     elif set_name == "gen_1_14_128":
@@ -607,6 +614,7 @@ def human_dataset_selector(set_name):
 
 
 def visualization_dataset():
+    return '/media/data_cifs/projects/prj_tracking_mot/akash/', 64, 2000, 2000
     return '/media/data_cifs/projects/prj_tracking/tunnel_vis/sample_2/tfrecords', 64, 100, 100
 
 
