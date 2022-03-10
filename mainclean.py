@@ -29,6 +29,8 @@ import matplotlib
 from torch._six import inf
 from torchvideotransforms import video_transforms, volume_transforms
 
+# Logging
+import wandb
 
 torch.backends.cudnn.benchmark = True
 
@@ -41,6 +43,7 @@ use_augmentations = False
 disentangle_channels = False
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+wandb.init(project="pathtracker_mot_expt2", entity="serrelab")
 
 def debug_plot(img):
     from matplotlib import pyplot as plt
@@ -121,7 +124,8 @@ if __name__ == '__main__':
     val_loader = tfr_data_loader(data_dir=pf_root+'test-*', batch_size=args.batch_size, timesteps=args.length, drop_remainder=True)
 
     results_folder = os.path.join('results', stem, '{0}'.format(args.name))
-    ES = EarlyStopping(patience=50, results_folder=results_folder)  # 200
+
+    ES = EarlyStopping(patience=200, results_folder=results_folder)  # 200
     os.makedirs(results_folder, exist_ok=True)
     exp_logging = args.log
     jacobian_penalty = args.penalty
@@ -165,7 +169,21 @@ if __name__ == '__main__':
     if args.ckpt is not None:
         model = engine.load_ckpt(model, args.ckpt)
     scale = torch.Tensor([1.0]).to(device)
-    print("\nDEBUG: Just before we start training")
+
+    wandb.config = {
+      "penalty": jacobian_penalty,
+      "start_epoch": args.start_epoch,
+      "epochs": args.epochs,
+      "lr": args.lr,
+      "loaded_ckpt": args.ckpt,
+      "results_dir": results_folder,
+      "exp_name": args.name,
+      "algo": args.algo,
+      "dimensions": args.dimensions,
+      "fb_kernel_size": args.fb_kernel_size,
+      "param_names_shapes": param_names_shapes,
+    }
+    #print("\nDEBUG: Just before we start training")
     for epoch in range(args.start_epoch, args.epochs):
         
         batch_time = AverageMeter()
@@ -182,12 +200,12 @@ if __name__ == '__main__':
 
         #import pdb; pdb.set_trace()
         for idx, (imgs, target) in enumerate(train_loader):
-            print("DEBUG:", idx, len(imgs), len(target))
+            #print("DEBUG:", idx, len(imgs), len(target))
             data_time.update(time.perf_counter() - end)
             
             imgs, target = engine.prepare_data(imgs=imgs, target=target, args=args, device=device, disentangle_channels=disentangle_channels)  # noqa
 
-            print("DEBUG: Before Run training")
+            #print("DEBUG: Before Run training")
             # Run training
             output, jv_penalty = engine.model_step(model, imgs, model_name=args.model)
             if isinstance(output, tuple):
@@ -212,6 +230,7 @@ if __name__ == '__main__':
             batch_time.update(time.perf_counter() - end)
             
             end = time.perf_counter()
+
             if idx % (args.print_freq) == 0:
                 time_now = time.time()
                 print_string = 'Epoch: [{0}][{1}/{2}]  lr: {lr:g}  Time: {batch_time.val:.3f} (itavg:{timeiteravg:.3f}) '\
@@ -229,6 +248,8 @@ if __name__ == '__main__':
                 with open(results_folder + args.name + '.txt', 'a+') as log_file:
                     log_file.write(print_string + '\n')
         #lr_scheduler.step()
+        wandb.log({"loss":loss, "acc": top1.avg})
+        wandb.watch(model)
         print(epoch)
         train_log_dict['loss'].extend(losses.history)
         train_log_dict['balacc'].extend(top1.history)
@@ -237,6 +258,8 @@ if __name__ == '__main__':
         train_log_dict['f1score'].extend(f1score.history)
         save_npz(epoch, train_log_dict, results_folder, 'train')
         save_npz(epoch, val_log_dict, results_folder, 'val')
+
+	
 
         if (epoch + 1) % 1 == 0 or epoch == args.epochs - 1:
             model.eval()

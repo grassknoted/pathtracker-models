@@ -130,8 +130,8 @@ def model_step(model, imgs, model_name, test=False):
             output, states, gates = model.forward(imgs, testmode=True)
             return output, states, gates
         else:
-            print("DEBUG: This else-else is being executed")
-            import ipdb; ipdb.set_trace()
+            #print("DEBUG: This else-else is being executed")
+            #import ipdb; ipdb.set_trace()
             output, jv_penalty = model.forward(imgs)
     if test:
         return output, None, None

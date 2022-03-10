@@ -503,7 +503,7 @@ class FFhGRU(nn.Module):
         self.nl = nl
 
     def forward(self, x, testmode=False):
-        import ipdb; ipdb.set_trace()
+        #import ipdb; ipdb.set_trace()
         # First step: replicate x over the channel dim self.hgru_size times
         xbn = self.preproc(x)
         # xbn = self.bn(xbn)  # This might be hurting me...
